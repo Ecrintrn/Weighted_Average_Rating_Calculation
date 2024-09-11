@@ -75,3 +75,31 @@ df.loc[(df["Progress"]>10) & (df["Progress"]<=45), "Rating"].mean() *24/100 +\
 df.loc[(df["Progress"]>45) & (df["Progress"]<=75), "Rating"].mean() * 26/100 +\
 df.loc[df["Progress"]>75, "Rating"].mean() *28/100
 ```
+
+# Course Weighted Rating
+
+In the "course weighted rating" section, we combine user-based and time-based averages to create a single rating. This approach accounts for both user progress and the timing of ratings, resulting in a more balanced and accurate evalua
+
+`time_based_weighted_average(dataframe) * 40/100 + user_based_weighted_average(dataframe) * 60/100`
+
+# Pipeline
+
+In the pipeline section, all the code for time-based and user-based average calculations is combined into one structure. This allows running just this part to produce the final result.
+
+```
+dataframe["Timestamp"] = pd.to_datetime(dataframe["Timestamp"])
+current_date = pd.to_datetime("2021-02-10 00:00:00")
+dataframe[day_column] = (current_date - dataframe["Timestamp"]).dt.days
+
+# time based weighted average
+time_based_avg = dataframe.loc[dataframe[day_column]<=30, rating_column].mean() * tw1/100 + \
+dataframe.loc[(dataframe[day_column]>30) & (dataframe[day_column]<=90), rating_column].mean() * tw2/100 + \
+dataframe.loc[(dataframe[day_column]>90) & (dataframe[day_column]<=180), rating_column].mean() * tw3/100 + \
+dataframe.loc[dataframe[day_column]>180, rating_column].mean() * tw4/100
+
+# user based weighted average
+user_based_average = dataframe.loc[dataframe[progress_column]<=10, rating_column].mean() * uw1/100 +\
+dataframe.loc[(dataframe[progress_column]>10) & (dataframe[progress_column]<=45), rating_column].mean() * uw2/100 +\
+dataframe.loc[(dataframe[progress_column]>45) & (dataframe[progress_column]<=75), rating_column].mean() * uw3/100 +\
+dataframe.loc[dataframe[progress_column]>75, rating_column].mean() * uw4/100
+```
