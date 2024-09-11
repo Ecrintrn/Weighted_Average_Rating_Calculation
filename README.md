@@ -69,6 +69,8 @@ df.loc[df["days"]>180, "Rating"].mean() * 22/100
 
 User-Based Average Calculation calculates a weighted average rating based on different rating ranges. The code snippet computes the average rating for various rating ranges and assigns different weights to these averages. Ratings within higher ranges are given more weight, reflecting their greater significance in the overall average rating.
 
+***user_based_weighted_average = sum(similarity user * user preference) / sum(similarity)***
+
 ```
 df.loc[df["Progress"]<=10, "Rating"].mean() * 22/100 +\
 df.loc[(df["Progress"]>10) & (df["Progress"]<=45), "Rating"].mean() *24/100 +\
